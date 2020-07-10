@@ -15,59 +15,27 @@ import java.util.Scanner;
  *
  * @author crist
  */
-public class AutomataAFNL {
+public class AutomataAFNL extends AutomataAFN{
 
-    public List<String> Alfabeto;
-    public Estado EstadoInicial;
-    public List<Estado> Estados;
-    public List<Estado> EstadosAceptacion;
+    
     Scanner scan = new Scanner(System.in);
 
+    public AutomataAFNL() {
+    }
+
     public AutomataAFNL(String estadoInicial) {
-        EstadoInicial = new Estado(estadoInicial);
-
-        Alfabeto = new ArrayList<>();
-        Estados = new ArrayList<>();
-
-        Estados.add(EstadoInicial);
-        EstadosAceptacion = new ArrayList<>();
+        super(estadoInicial);
     }
 
     public AutomataAFNL(List<String> alfabeto, Estado estado, List<Estado> estados, List<Estado> estadosAceptacion) {
-        this.Alfabeto = alfabeto;
-        this.EstadoInicial = estado;
-        this.Estados = estados;
-        this.EstadosAceptacion = estadosAceptacion;
+        super(alfabeto, estado, estados, estadosAceptacion);
     }
-
-    public void AgregarEstado(String nombreEstado) {
-
-        Estado existeEstado = new Estado(nombreEstado);
-        if (!Estados.contains(existeEstado)) {
-            Estados.add(existeEstado);
-        }
-
-    }
-
-    public Estado GetEstadoByNombre(String nombreEstado) {
-
-        Estado existeEstado = new Estado(nombreEstado);
-        for (int i = 0; i < Estados.size(); i++) {
-            if (Estados.get(i).nombre.equals(nombreEstado)) {
-                return Estados.get(i);
-            }
-
-        }
-        return null;
-
-    }
-
-    public Estado GetEstadoInicial() {
-        return GetEstadoByNombre(EstadoInicial.nombre);
-    }
-
-    public void CrearAutomataAMano() {
-
+    
+    
+    
+    @Override
+    public void CrearAutomataAMano() {          //el metodo etiene el mismo nombre que e de la clase
+                                                // el @overrite permite ajustar el comportamiento para el hijo
         /*AgregarEstado("q0");
          AgregarEstado("q1");
          AgregarEstado("q2");
@@ -111,64 +79,8 @@ public class AutomataAFNL {
         estadoQ4.AgregarTransicion("a", estadoQ3);
 
     }
-
-    public void PedirAutomata() {
-
-        String read;
-        int p = 0;
-        System.out.println("Ingrese los estados, cuando termine ingrese 0 ");
-        while (1 < 2) {
-            read = scan.next();
-            if (read.equals("0")) {
-                break;
-            }
-            AgregarEstado(read);
-
-        }
-
-        System.out.println("Ingrese el o los estados de aceptacion cuando termine ingrese 0 ");
-
-        while (1 < 2) {
-            read = scan.next();
-            if (read.equals("0")) {
-                break;
-            }
-            EstadosAceptacion.add(GetEstadoByNombre(read));
-
-        }
-
-        System.out.println("Ingrese las transiciones cuando termine ingrese 0 ");
-        String actual;
-        String voy;
-        String termina;
-        while (1 < 2) {
-            System.out.println("Estoy en el estado:");
-            actual = scan.next();
-            if (actual.equals("0")) {
-                break;
-            }
-            System.out.println("Paso con el caracter:");
-            voy = scan.next();
-            if (voy.equals("0")) {
-                break;
-            }
-            System.out.println("paso al estado:");
-            termina = scan.next();
-            if (termina.equals("0")) {
-                break;
-            }
-
-            GetEstadoByNombre(actual).AgregarTransicion(voy, GetEstadoByNombre(termina));
-
-        }
-
-        /* GetEstadoByNombre("q0").AgregarTransicion("a",GetEstadoByNombre("q1") );
-         GetEstadoByNombre("q1").AgregarTransicion("a", GetEstadoByNombre("q1"));
-         GetEstadoByNombre("q1").AgregarTransicion("a", GetEstadoByNombre("q2"));
-         GetEstadoByNombre("q2").AgregarTransicion("b", GetEstadoByNombre("q1"));
-         GetEstadoByNombre("q1").AgregarTransicion("a", GetEstadoByNombre("q1"));*/
-    }
-
+    
+    @Override
     public boolean procesarCadena(String Cadena, Estado estadoActual) {
         if (Cadena.length() == 0 || Cadena.equals("$")) {
 
@@ -234,6 +146,7 @@ public class AutomataAFNL {
         return false;
     }
 
+    @Override
     public void generarSigma(String Sigma) {
 
         List<Character> sigma = new ArrayList<>();
@@ -273,7 +186,8 @@ public class AutomataAFNL {
         }
 
     }
-
+    
+    // metodo completamente nuevo de la clase
     public boolean buscarL(Estado estado) {
         int lim = estado.BuscarTransicion("$").size();
         if (lim == 0) {
