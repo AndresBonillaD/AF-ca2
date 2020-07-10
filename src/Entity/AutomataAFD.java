@@ -15,34 +15,21 @@ import java.util.Scanner;
  *
  * @author crist
  */
-public class AutomataAFD {
+public class AutomataAFD extends FiniteStateMachine {
 
-    public List<String> Alfabeto;
-    public Estado EstadoInicial;
-    public List<Estado> Estados;
-    public List<Estado> EstadosAceptacion;
-    public List<String> detalleEstados ;
+    
+    public List<String> detalleEstados ;        //nuevo atributo, se puede inicializar por constructor tambien, a conciderar
     Scanner scan = new Scanner(System.in);
 
+    public AutomataAFD() {
+    }
+
     public AutomataAFD(String estadoInicial) {
-        EstadoInicial = new Estado(estadoInicial);
-
-        Alfabeto = new ArrayList<>();
-        Estados = new ArrayList<>();
-
-        Estados.add(EstadoInicial);
-        
-        EstadosAceptacion = new ArrayList<>();
-        detalleEstados = new ArrayList<>();
-        
-        detalleEstados.add(EstadoInicial.nombre);
+        super(estadoInicial);
     }
 
     public AutomataAFD(List<String> alfabeto, Estado estado, List<Estado> estados, List<Estado> estadosAceptacion) {
-        this.Alfabeto = alfabeto;
-        this.EstadoInicial = estado;
-        this.Estados = estados;
-        this.EstadosAceptacion = estadosAceptacion;
+        super(alfabeto, estado, estados, estadosAceptacion);
     }
 
     public void AgregarEstado(String nombreEstado) {
@@ -158,7 +145,7 @@ public class AutomataAFD {
         GetEstadoByNombre("q1").AgregarTransicion("a", GetEstadoByNombre("q1"));*/
 
     }
-
+    
     public boolean procesarCadena(String Cadena, Estado estadoActual) {
         if (Cadena.length() == 0 || Cadena.equals("$")) {
             for (int i = 0; i < EstadosAceptacion.size(); i++) {
@@ -187,6 +174,8 @@ public class AutomataAFD {
         return false;
 
     }
+    
+    // creo que este metodo no se está usando
     public void generarSigma(String Sigma) {
         
          List<Character> sigma = new ArrayList<>();
@@ -227,6 +216,7 @@ public class AutomataAFD {
         }
         
     }
+    
     public boolean procesarCadenaConDetalles(String Cadena, Estado estadoActual) {
         if (Cadena.length() == 0 || Cadena.equals("$")) {
             for (int i = 0; i < EstadosAceptacion.size(); i++) {
@@ -257,6 +247,7 @@ public class AutomataAFD {
         return false;
 
     }
+    
     public void listaEstados(){
         for (int i = 0; i < detalleEstados.size(); i++) {
             System.out.println(detalleEstados.get(i));

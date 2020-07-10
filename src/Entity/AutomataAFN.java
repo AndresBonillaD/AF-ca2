@@ -15,31 +15,22 @@ import java.util.Scanner;
  *
  * @author crist
  */
-public class AutomataAFN {
+public class AutomataAFN extends FiniteStateMachine {
 
-    public List<String> Alfabeto;
-    public Estado EstadoInicial;
-    public List<Estado> Estados;
-    public List<Estado> EstadosAceptacion;
+    
     Scanner scan = new Scanner(System.in);
 
+    public AutomataAFN() {
+    }
+
     public AutomataAFN(String estadoInicial) {
-        EstadoInicial = new Estado(estadoInicial);
-
-        Alfabeto = new ArrayList<>();
-        Estados = new ArrayList<>();
-
-        Estados.add(EstadoInicial);
-        EstadosAceptacion = new ArrayList<>();
+        super(estadoInicial);
     }
 
     public AutomataAFN(List<String> alfabeto, Estado estado, List<Estado> estados, List<Estado> estadosAceptacion) {
-        this.Alfabeto = alfabeto;
-        this.EstadoInicial = estado;
-        this.Estados = estados;
-        this.EstadosAceptacion = estadosAceptacion;
+        super(alfabeto, estado, estados, estadosAceptacion);
     }
-
+    
     public void AgregarEstado(String nombreEstado) {
 
         Estado existeEstado = new Estado(nombreEstado);
@@ -177,6 +168,7 @@ public class AutomataAFN {
         return false;
 
     }
+    
     public void generarSigma(String Sigma) {
         
          List<Character> sigma = new ArrayList<>();
