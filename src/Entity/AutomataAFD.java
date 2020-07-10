@@ -26,6 +26,8 @@ public class AutomataAFD extends FiniteStateMachine {
 
     public AutomataAFD(String estadoInicial) {
         super(estadoInicial);
+        detalleEstados = new ArrayList<>() ;
+        detalleEstados.add(estadoInicial);
     }
 
     public AutomataAFD(List<String> alfabeto, Estado estado, List<Estado> estados, List<Estado> estadosAceptacion) {
