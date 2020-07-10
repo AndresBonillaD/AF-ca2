@@ -163,6 +163,7 @@ public class AutomataAFD {
         if (Cadena.length() == 0 || Cadena.equals("$")) {
             for (int i = 0; i < EstadosAceptacion.size(); i++) {
                 if (EstadosAceptacion.get(i) == estadoActual) {
+                    
                     return true;
                 }
             }
@@ -246,7 +247,7 @@ public class AutomataAFD {
             }
 
             for (int j = 0; j < transicionEncontrada.size(); j++) {
-                boolean respuesta = procesarCadena(cadenaRestante, transicionEncontrada.get(j).EstadosDestino);
+                boolean respuesta = procesarCadenaConDetalles(cadenaRestante, transicionEncontrada.get(j).EstadosDestino);
                 if (respuesta) {
                     detalleEstados.add(transicionEncontrada.get(j).EstadosDestino.nombre);
                     return true;
