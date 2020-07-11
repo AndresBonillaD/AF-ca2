@@ -5,6 +5,9 @@
  */
 package Controller;
 
+import Entity.AutomataAFD;
+import Entity.AutomataAFN;
+import Entity.AutomataAFNL;
 import Entity.FiniteStateMachine;
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,6 +27,8 @@ public class NewFileReader {
     static String alphabetRegex = "^([^\n\t\r$])$|^([^\n\t$\r])-([^\n\t$\r])$";
     static String statesRegex = "^([^;>\r\n\t ])([^;>\r\n\t]*)$";
     static String tratitionsiiRegex = "^([^;>\r\n\t ])([^;>\r\n\t]*):([^\n\t\r])>([^;>\r\n\t ])([^;>\r\n\t]*)(;([^;>\r\n\t ])([^;>\r\n\t]*))*$";
+    
+    static FiniteStateMachine fsm;
     
     public NewFileReader() {
     }
@@ -73,15 +78,18 @@ public class NewFileReader {
         int readerHead = 0;
     
         if(match){
-            if(fileLines.get(0).equals("!dfa")){
+            if(fileLines.get(0).equals("#!dfa")){
                 System.out.println("Linea: 0" + ";" + fileLines.get(0) + ";" + match);
                 // crear afd
-            }else if(fileLines.get(0).equals("!nfa")){
+                fsm = new AutomataAFD();
+            }else if(fileLines.get(0).equals("#!nfa")){
                 System.out.println("Linea: 0" + ";" + fileLines.get(0) + ";" + match);
                 // crear afn
-            }else if(fileLines.get(0).equals("!nfe")){
+                fsm = new AutomataAFN();
+            }else if(fileLines.get(0).equals("#!nfe")){
                 System.out.println("Linea: 0" + ";" + fileLines.get(0) + ";" + match);
-                // crear afdl
+                // crear afe
+                fsm = new AutomataAFNL();
             }else{
                 System.out.println("WARNING:    formato no aceptado");
             }
@@ -94,9 +102,9 @@ public class NewFileReader {
             if(fileLines.get(i).equals("#alphabet")){
                 System.out.println("generando alfabeto...");
                 while(i <= fileLines.size() && !fileLines.get(i + 1).equals("#states")){
-                    System.out.println("Linea: " + (i+1) + ";" + fileLines.get(i + 1));
+                    //System.out.println("Linea: " + (i+1) + ";" + fileLines.get(i + 1));
                     //generar alfabeto
-                    //generateAlphabet();
+                    generateAlphabet(fileLines.get(i + 1), fsm);
                     i++;
                 }
             }
@@ -104,8 +112,9 @@ public class NewFileReader {
             if(fileLines.get(i).equals("#states")){
                 System.out.println("generando estados...");
                 while(i <= fileLines.size() && !fileLines.get(i + 1).equals("#initial")){
-                    System.out.println("Linea: " + (i+1) + ";" + fileLines.get(i + 1));
+                    //System.out.println("Linea: " + (i+1) + ";" + fileLines.get(i + 1));
                     //generar estados
+                    generateStates(fileLines.get(i + 1), fsm);
                     i++;
                 }
             }
@@ -143,25 +152,49 @@ public class NewFileReader {
                 
             //System.out.println(fileLines.get(i));
         }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    
     return automataFinito;
     }
     
-    public static void generateAlphabet(String line){
+    public static void generateAlphabet(String line, FiniteStateMachine fsm){
         Pattern alhabetPattern = Pattern.compile(alphabetRegex);
         Matcher m = alhabetPattern.matcher(line);
-        boolean isAcceoted = m.matches();
-        System.out.println("-" + line + "," + isAcceoted);
+        boolean isAccepted = m.matches();
+        System.out.println("- " + line + " ; " + isAccepted);
+        
+        if(isAccepted){
+            if(line.length() > 1){
+                int a = (int) line.charAt(0);                     // toma valores ASCII de los esctremos del intervalo
+                int b = (int) line.charAt(2);  
+                int i = 0;
+                for (int x = a; x <= b; x++) {                          //ingresa caracteres al alfebeto
+                System.out.println("- " + (char) x + " -");
+                fsm.Alfabeto.add(String.valueOf(x));                
+                }        
+            }else{
+                fsm.Alfabeto.add(line);
+            }
+        }else{
+            System.out.println("Warning!!!  -" + line);
+        
+        }
     }
+    
+    public static void generateStates(String line, FiniteStateMachine fsm){
+        Pattern alhabetPattern = Pattern.compile(statesRegex);
+        Matcher m = alhabetPattern.matcher(line);
+        boolean isAccepted = m.matches();
+        System.out.println("- " + line + " ; " + isAccepted);
+        
+        if(isAccepted){
+            Estado state = new Estado(line);
+            fsm.Estados.add(state);
+        }else{
+            System.out.println("Warning!!!  -" + line);
+        }
+    }
+    
+    
+    
     
     
     
