@@ -29,19 +29,22 @@ public class Automatas {
     /**
      * @param args the command line arguments
      */
-
     public static void main(String[] args) {
         // TODO code application logic here
 
-        automataAFD = new AutomataAFD("q0");
         automataAFN = new AutomataAFN("q0");
         automataAFNL = new AutomataAFNL("q0");
+        List<AutomataAFD> listaAFD = new ArrayList<>();
+        List<AutomataAFN> listaAFN = new ArrayList<>();
+        List<AutomataAFNL> listaAFNL = new ArrayList<>();
 
         Scanner sn = new Scanner(System.in);
         int option, optionIn;
         boolean exit = false;
         boolean result = false;
         String cadena = new String();
+        List<String> cadenasAFD = new ArrayList<>();
+        
         while (!exit) {
 
             System.out.println("Automatas");
@@ -50,7 +53,8 @@ public class Automatas {
             System.out.println("2.AFD");
             System.out.println("3.AFN");
             System.out.println("4.AFN-lambda");
-            System.out.println("5. Salir");
+            System.out.println("5.Automata ya creado");
+            System.out.println("6. Salir");
 
             try {
 
@@ -68,7 +72,9 @@ public class Automatas {
                     case 2:
                         System.out.println("Autómata determinista");
                         System.out.println("Por favor ingrese manualmente el automata");
-                        automataAFD.CrearAutomataAMano();
+                        automataAFD = new AutomataAFD("q0");
+                        automataAFD.PedirAutomata();
+                        listaAFD.add(automataAFD);
 
                         System.out.println("Automáta correctamente creado");
                         //archivoController.generarArchivo(automataFinito);
@@ -81,7 +87,7 @@ public class Automatas {
                             case 1:
                                 System.out.println("Por favor ingrese la cadena a evaluar:");
                                 cadena = sn.next();
-                                result=automataAFD.procesarCadena(cadena, automataAFD.EstadoInicial);
+                                result = automataAFD.procesarCadena(cadena, automataAFD.EstadoInicial);
                                 if (result) {
                                     System.out.println("La cadena es aceptada");
                                 } else {
@@ -92,7 +98,7 @@ public class Automatas {
                                 System.out.println("Por favor ingrese la cadena a evaluar:");
                                 cadena = sn.next();
                                 boolean aux = automataAFD.procesarCadenaConDetalles(cadena, automataAFD.EstadoInicial);
-                                if(aux){
+                                if (aux) {
                                     automataAFD.listaEstados();
                                 }
                                 if (aux) {
@@ -139,7 +145,7 @@ public class Automatas {
                                 }
                                 break;
                             case 3:
-                               // result = afnController.procesarListaDeCadenas();
+                                // result = afnController.procesarListaDeCadenas();
 
                                 break;
                         }
@@ -149,7 +155,7 @@ public class Automatas {
 
                         System.out.println("Por favor ingrese manualmente el automata");
                         automataAFNL.CrearAutomataAMano();
-                        
+
                         System.out.println("Automáta correctamente creado");
                         System.out.println("Por favor elija entre las opciones:");
                         System.out.println("1. Procesar cadena");
@@ -160,7 +166,7 @@ public class Automatas {
                             case 1:
                                 System.out.println("Por favor ingrese la cadena a evaluar:");
                                 cadena = sn.next();
-                                
+
                                 //result = afnController.procesarCadenaasd(cadena,afnController.initialState);
                                 result = automataAFNL.procesarCadena(cadena, automataAFNL.GetEstadoInicial());
                                 if (result) {
@@ -188,10 +194,68 @@ public class Automatas {
 
                         break;
                     case 5:
+                        System.out.println("1.AFD");
+                        System.out.println("2.AFN");
+                        System.out.println("3.AFN-lambda");
+                        optionIn = sn.nextInt();
+                        switch (optionIn) {
+                            case 1:
+                                System.out.println("Ingresel el numero del automata : ");
+                                cadena = sn.next();
+                                int n = Integer.parseInt(cadena);
+                                AutomataAFD leido =listaAFD.get(n);
+                                System.out.println("Autómata determinista");
+                               
+
+                                System.out.println("Automáta correctamente creado");
+                                //archivoController.generarArchivo(automataFinito);
+                                System.out.println("Por favor elija entre las opciones:");
+                                System.out.println("1. Procesar cadena");
+                                System.out.println("2. Procesar cadena con detalle");
+                                System.out.println("3. Procesar lista de cadenas");
+                                optionIn = sn.nextInt();
+                                switch (optionIn) {
+                                    case 1:
+                                        System.out.println("Por favor ingrese la cadena a evaluar:");
+                                        cadena = sn.next();
+                                        result = leido.procesarCadena(cadena, leido.EstadoInicial);
+                                        if (result) {
+                                            System.out.println("La cadena es aceptada");
+                                        } else {
+                                            System.out.println("La cadena NO es aceptada");
+                                        }
+                                        break;
+                                    case 2:
+                                        System.out.println("Por favor ingrese la cadena a evaluar:");
+                                        cadena = sn.next();
+                                        boolean aux = leido.procesarCadenaConDetalles(cadena, leido.EstadoInicial);
+                                        if (aux) {
+                                            leido.listaEstados();
+                                        }
+                                        if (aux) {
+                                            System.out.println("La cadena es aceptada");
+                                        } else {
+                                            System.out.println("La cadena NO es aceptada");
+                                        }
+                                        break;
+                                    case 3:
+                                         System.out.println("Por favor ingrese la cadena a evaluar:");
+                                         while(1<2){
+                                             cadena = sn.next();
+                                             if(cadena.equals("0")){
+                                                 break;
+                                             }
+                                             cadenasAFD.add(cadena);
+                                             
+                                         }
+                                         leido.procesarListaCadenas(cadenasAFD);
+                                        break;
+                                }
+                                break;
+                        }
+                    case 6: //solo para pruebas
                         exit = true;
                         break;
-                    case 6: //solo para pruebas
-
                     default:
                         System.out.println("Solo números entre 1 y 5");
                 }

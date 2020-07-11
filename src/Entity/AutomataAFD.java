@@ -18,7 +18,11 @@ import java.util.Scanner;
 public class AutomataAFD extends FiniteStateMachine {
 
     
-    public List<String> detalleEstados ;        //nuevo atributo, se puede inicializar por constructor tambien, a conciderar
+    public List<String> detalleEstados ;  
+    //nuevo atributo, se puede inicializar por constructor tambien, a conciderar
+    public List<Transicion> parejas; 
+    public List<Transicion> parejasno;
+     public List<String> detalleEstadosNo ; 
     Scanner scan = new Scanner(System.in);
 
     public AutomataAFD() {
@@ -27,7 +31,11 @@ public class AutomataAFD extends FiniteStateMachine {
     public AutomataAFD(String estadoInicial) {
         super(estadoInicial);
         detalleEstados = new ArrayList<>() ;
+        detalleEstadosNo = new ArrayList<>() ;
+        parejas = new ArrayList<>();
+        parejasno = new ArrayList<>();
         detalleEstados.add(estadoInicial);
+        detalleEstadosNo.add(estadoInicial);
     }
 
     public AutomataAFD(List<String> alfabeto, Estado estado, List<Estado> estados, List<Estado> estadosAceptacion) {
@@ -114,6 +122,9 @@ public class AutomataAFD extends FiniteStateMachine {
            EstadosAceptacion.add(GetEstadoByNombre(read));
            
         }
+        System.out.println("Ingrese le alfabeto: ");
+        read = scan.next();
+        generarSigma(read);
         
         System.out.println("Ingrese las transiciones cuando termine ingrese 0 ");
         String actual;
@@ -235,6 +246,8 @@ public class AutomataAFD extends FiniteStateMachine {
             //Si la cadena que se recibe por parmaetro es de longitud 1 al buscar la transicion se debe evaluar si el estado destino es valido, retorna true, sino false.
             List<Transicion> transicionEncontrada = estadoActual.BuscarTransicion(caracterEvaluar);
             if (transicionEncontrada == null || transicionEncontrada.isEmpty()) {
+                Transicion fallida = new Transicion(caracterEvaluar,estadoActual);
+                detalleEstadosNo.add(estadoActual.nombre);
                 return false;
             }
 
@@ -242,6 +255,7 @@ public class AutomataAFD extends FiniteStateMachine {
                 boolean respuesta = procesarCadenaConDetalles(cadenaRestante, transicionEncontrada.get(j).EstadosDestino);
                 if (respuesta) {
                     detalleEstados.add(transicionEncontrada.get(j).EstadosDestino.nombre);
+                    parejas.add(transicionEncontrada.get(j));
                     return true;
                 }
             }
@@ -250,11 +264,48 @@ public class AutomataAFD extends FiniteStateMachine {
         return false;
 
     }
+    public void procesarListaCadenas (List <String >cadenas){
+        for (int i = 0; i < cadenas.size(); i++) {
+           boolean aux= procesarCadenaConDetalles(cadenas.get(i),EstadoInicial);
+           if(aux){
+               listaEstados();
+               System.out.println("si");
+           }else{
+               listaEstados();
+               System.out.println("no");
+           }
+        }
+    }
     
     public void listaEstados(){
         for (int i = 0; i < detalleEstados.size(); i++) {
             System.out.println(detalleEstados.get(i));
         }
+        detalleEstados.clear();
+        detalleEstados.add(EstadoInicial.nombre);
+        System.out.print("\t");
+        for (int i = 0; i < parejas.size(); i++) {
+            System.out.print(parejas.get(i).Sigma);
+            System.out.println(",");
+            System.out.print(parejas.get(i).EstadosDestino.nombre);
+        }
+        System.out.print("\t");
+        parejas.clear();
+    }
+    public void listaEstadosNo(){
+        for (int i = 0; i < detalleEstadosNo.size(); i++) {
+            System.out.println(detalleEstadosNo.get(i));
+        }
+        detalleEstados.clear();
+        detalleEstados.add(EstadoInicial.nombre);
+        System.out.print("\t");
+        for (int i = 0; i < parejasno.size(); i++) {
+            System.out.print(parejasno.get(i).Sigma);
+            System.out.println(",");
+            System.out.print(parejas.get(i).EstadosDestino.nombre);
+        }
+        System.out.print("\t");
+        parejasno.clear();
     }
 
 }
