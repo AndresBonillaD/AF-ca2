@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
  */
 public class NewFileReader {
     
-    static String typeRegex = "^(#!)(nfe|nfd|nfn)$";
+    static String typeRegex = "^(#!)(nfe|dfa|nfa)$";
     static String alphabetRegex = "^([^\n\t\r$])$|^([^\n\t$\r])-([^\n\t$\r])$";
     static String statesRegex = "^([^;>\r\n\t ])([^;>\r\n\t]*)$";
     static String tratitionsiiRegex = "^([^;>\r\n\t ])([^;>\r\n\t]*):([^\n\t\r])>([^;>\r\n\t ])([^;>\r\n\t]*)(;([^;>\r\n\t ])([^;>\r\n\t]*))*$";
@@ -35,12 +35,7 @@ public class NewFileReader {
         
     public static FiniteStateMachine generateAutomata(String fileRute){
         
-        
-        
-        
-        FiniteStateMachine automataFinito = new FiniteStateMachine();
         List<String> fileLines = new ArrayList<>();
-        
         File file = null;
         FileReader fr = null;
         BufferedReader br = null;
@@ -74,9 +69,7 @@ public class NewFileReader {
         Pattern patron = Pattern.compile(typeRegex);
         Matcher m = patron.matcher(fileLines.get(0));
         boolean match = m.matches();
-        
-        int readerHead = 0;
-    
+                    
         if(match){
             if(fileLines.get(0).equals("#!dfa")){
                 System.out.println("Linea: 0" + ";" + fileLines.get(0) + ";" + match);
@@ -94,8 +87,9 @@ public class NewFileReader {
                 System.out.println("WARNING:    formato no aceptado");
             }
         }else{
-            System.out.println("WARNING:    Primera linea mal formulada");
+            System.out.println("WARNING:    Primera linea mal formulada" + fileLines.get(0));
         }
+        
         
         for (int i = 0; i < fileLines.size(); i++) {
             
@@ -122,8 +116,9 @@ public class NewFileReader {
             if(fileLines.get(i).equals("#inital")){
                 System.out.println("generando estado inicial...");
                 while(i <= fileLines.size() && !fileLines.get(i + 1).equals("#accepting")){
-                    System.out.println("Linea: " + (i+1) + ";" + fileLines.get(i + 1));
-                    //generar estado inicial
+                    //System.out.println("Linea: " + (i+1) + ";" + fileLines.get(i + 1));
+                    //generar estado inicial                    
+                    generateInitialState(fileLines.get(i + 1), fsm);
                     i++;
                 }
             }
@@ -131,8 +126,9 @@ public class NewFileReader {
             if(fileLines.get(i).equals("#accepting")){
                 System.out.println("generando estados de aceptacion...");
                 while(i <= fileLines.size() && !fileLines.get(i + 1).equals("#transitions")){
-                    System.out.println("Linea: " + (i+1) + ";" + fileLines.get(i + 1));
+                    //System.out.println("Linea: " + (i+1) + ";" + fileLines.get(i + 1));
                     //generar estados de aceptación
+                    generateAcceptingStates(fileLines.get(i + 1), fsm);
                     i++;
                 }
             }
@@ -152,7 +148,7 @@ public class NewFileReader {
                 
             //System.out.println(fileLines.get(i));
         }
-    return automataFinito;
+    return fsm;
     }
     
     public static void generateAlphabet(String line, FiniteStateMachine fsm){
@@ -193,7 +189,33 @@ public class NewFileReader {
         }
     }
     
+    public static void generateAcceptingStates(String line, FiniteStateMachine fsm){
+        Pattern alhabetPattern = Pattern.compile(statesRegex);
+        Matcher m = alhabetPattern.matcher(line);
+        boolean isAccepted = m.matches();
+        System.out.println("- " + line + " ; " + isAccepted);
+        
+        if(isAccepted){
+            Estado state = new Estado(line);
+            fsm.EstadosAceptacion.add(state);
+        }else{
+            System.out.println("Warning!!!  -" + line);
+        }
+    }
     
+    public static void generateInitialState(String line, FiniteStateMachine fsm){
+        Pattern alhabetPattern = Pattern.compile(statesRegex);
+        Matcher m = alhabetPattern.matcher(line);
+        boolean isAccepted = m.matches();
+        System.out.println("- " + line + " ; " + isAccepted);
+        
+        if(isAccepted){
+            Estado state = new Estado(line);
+            fsm.EstadoInicial = state;
+        }else{
+            System.out.println("Warning!!!  -" + line);
+        }
+    }
     
     
     

@@ -58,11 +58,21 @@ public class Automatas {
 
                 switch (option) {
                     case 1:
-                        System.out.println("Ingrese la ruta del archivo .txt:");
-                        String ruta = sn.next();
-                        // por el momneto el automata es null el metodo retorna un automata null
-                        FiniteStateMachine automata = new FiniteStateMachine();
-                        automata = NewFileReader.generateAutomata(ruta);
+                        
+                        System.out.println("1. Nuevo Automata");
+                        System.out.println("2. Consultar");
+                        option = sn.nextInt();
+                        switch(option){
+                            case 1:
+                                System.out.println("Ingrese la ruta del archivo .txt:");
+                                String ruta = sn.next();
+                                FiniteStateMachine automata = new FiniteStateMachine();
+                                automata = NewFileReader.generateAutomata(ruta);
+                            case 2:
+                                System.out.println("Consultar automata creado");
+                        }
+                        
+                        
 
                         break;
                     case 2:
