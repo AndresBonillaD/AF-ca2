@@ -22,11 +22,15 @@ import java.util.regex.Pattern;
  * @author andres
  */
 public class NewFileReader {
-    
-    static String typeRegex = "^(#!)(nfe|dfa|nfa)$";
-    static String alphabetRegex = "^([^\n\t\r$])$|^([^\n\t$\r])-([^\n\t$\r])$";
-    static String statesRegex = "^([^;>\r\n\t ])([^;>\r\n\t]*)$";
-    static String tratitionsiiRegex = "^([^;>\r\n\t ])([^;>\r\n\t]*):([^\n\t\r])>([^;>\r\n\t ])([^;>\r\n\t]*)(;([^;>\r\n\t ])([^;>\r\n\t]*))*$";
+    /*
+    Expreciones regulares para evaluar las lineas
+    del archivo correspondientes a cada seccion
+    del formato
+    */
+    private static final String typeRegex = "^(#!)(nfe|dfa|nfa)$";
+    private static final String alphabetRegex = "^([^\n\t\r$])$|^([^\n\t$\r])-([^\n\t$\r])$";
+    private static final String statesRegex = "^([^;>\r\n\t ])([^;>\r\n\t]*)$";
+    private static final String trasitionsiRegex = "^([^;>\r\n\t ])([^;>\r\n\t]*):([^\n\t\r])>([^;>\r\n\t ])([^;>\r\n\t]*)(;([^;>\r\n\t ])([^;>\r\n\t]*))*$";
     
     static FiniteStateMachine fsm;
     
@@ -135,10 +139,8 @@ public class NewFileReader {
             
             if(fileLines.get(i).equals("#transitions")){
                 System.out.println("generando transiciones...");
-                i++;
-                while(i < fileLines.size()){
-                    System.out.println("Linea: " + (i) + ";" + fileLines.get(i));
-                    //generar trasiciones
+                while(i < fileLines.size() - 1){
+                    generateTransitions(fileLines.get(i + 1), fsm);
                     i++;
                 }
             }
@@ -176,8 +178,8 @@ public class NewFileReader {
     }
     
     public static void generateStates(String line, FiniteStateMachine fsm){
-        Pattern alhabetPattern = Pattern.compile(statesRegex);
-        Matcher m = alhabetPattern.matcher(line);
+        Pattern statesPattern = Pattern.compile(statesRegex);
+        Matcher m = statesPattern.matcher(line);
         boolean isAccepted = m.matches();
         System.out.println("- " + line + " ; " + isAccepted);
         
@@ -188,10 +190,10 @@ public class NewFileReader {
             System.out.println("Warning!!!  -" + line);
         }
     }
-    
+        
     public static void generateAcceptingStates(String line, FiniteStateMachine fsm){
-        Pattern alhabetPattern = Pattern.compile(statesRegex);
-        Matcher m = alhabetPattern.matcher(line);
+        Pattern statesPattern = Pattern.compile(statesRegex);
+        Matcher m = statesPattern.matcher(line);
         boolean isAccepted = m.matches();
         System.out.println("- " + line + " ; " + isAccepted);
         
@@ -204,8 +206,8 @@ public class NewFileReader {
     }
     
     public static void generateInitialState(String line, FiniteStateMachine fsm){
-        Pattern alhabetPattern = Pattern.compile(statesRegex);
-        Matcher m = alhabetPattern.matcher(line);
+        Pattern statesPattern = Pattern.compile(statesRegex);
+        Matcher m = statesPattern.matcher(line);
         boolean isAccepted = m.matches();
         System.out.println("- " + line + " ; " + isAccepted);
         
@@ -217,7 +219,34 @@ public class NewFileReader {
         }
     }
     
-    
+    public static void generateTransitions(String line, FiniteStateMachine fsm){
+        Pattern transitionPattern = Pattern.compile(trasitionsiRegex);
+        Matcher m = transitionPattern.matcher(line);
+        boolean isAccepted = m.matches();
+        System.out.println("- " + line + " ; " + isAccepted);
+        
+        Transicion t = new Transicion(null, null);
+        // estado : u > estado;estado;estado;estado
+        if(isAccepted){
+            String [] estSimbTrans = line.split(":");
+            System.out.println("-----" + estSimbTrans[0]);
+            for (int i = 0; i < fsm.Estados.size(); i++) {
+                if (fsm.Estados.get(i).nombre.equals(estSimbTrans[0])) {
+                    System.out.println("agregar trasicion al estado -" + fsm.Estados.get(i).nombre);
+                    String [] simbTrans = estSimbTrans[1].split(">");
+                    String [] trans = simbTrans[1].split(";");                    
+                    for (int j = 0; j < trans.length; j++){
+                        System.out.println("--" + fsm.Estados.get(i).nombre + ">" + trans[j]);
+                        Estado e = new Estado(trans[j]);
+                        t = new Transicion(simbTrans[0], e);
+                        fsm.Estados.get(i).Transiciones.add(t);
+                    }
+                }
+            }
+        }else{
+            System.out.println("Warning!!!  -" + line);
+        }   
+    }
     
     
  // CLASS END   
