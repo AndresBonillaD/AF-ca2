@@ -45,6 +45,12 @@ public class FiniteStateMachine {
         this.EstadosAceptacion = estadosAceptacion;
     }
     
-    
+    public void printFsm(){
+        System.out.println("#alphabet");
+        for(int i = 0; i < Alfabeto.size(); i++){
+            System.out.print(Alfabeto.get(i) + "-");
+        }
+        System.out.print('\n');
+    }
     
 }

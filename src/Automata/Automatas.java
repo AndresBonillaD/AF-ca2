@@ -34,6 +34,7 @@ public class Automatas {
 
         automataAFN = new AutomataAFN("q0");
         automataAFNL = new AutomataAFNL("q0");
+        List<FiniteStateMachine> listaFsm = new ArrayList<>();
         List<AutomataAFD> listaAFD = new ArrayList<>();
         List<AutomataAFN> listaAFN = new ArrayList<>();
         List<AutomataAFNL> listaAFNL = new ArrayList<>();
@@ -72,8 +73,10 @@ public class Automatas {
                                 String ruta = sn.next();
                                 FiniteStateMachine automata = new FiniteStateMachine();
                                 automata = NewFileReader.generateAutomata(ruta);
+                                listaFsm.add(automata);
                             case 2:
-                                System.out.println("Consultar automata creado");
+                                System.out.println("Consultar automata creado");                                
+                                listaFsm.get(0).printFsm();
                         }
                         
                         
@@ -213,7 +216,7 @@ public class Automatas {
                                 System.out.println("Ingresel el numero del automata : ");
                                 cadena = sn.next();
                                 int n = Integer.parseInt(cadena);
-                                AutomataAFD leido =listaAFD.get(n);
+                                AutomataAFD leido = listaAFD.get(n);
                                 System.out.println("Autómata determinista");
                                
 
