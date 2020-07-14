@@ -34,6 +34,7 @@ public class Automatas {
 
         automataAFN = new AutomataAFN("q0");
         automataAFNL = new AutomataAFNL("q0");
+        List<FiniteStateMachine> listaFsm = new ArrayList<>();
         List<AutomataAFD> listaAFD = new ArrayList<>();
         List<AutomataAFN> listaAFN = new ArrayList<>();
         List<AutomataAFNL> listaAFNL = new ArrayList<>();
@@ -74,9 +75,18 @@ public class Automatas {
                                 String ruta = sn.next();
                                 FiniteStateMachine automata = new FiniteStateMachine();
                                 automata = NewFileReader.generateAutomata(ruta);
-                            //listaAFD.add(automata);
+
+                                listaFsm.add(automata);
+                                break;
+
                             case 2:
-                                System.out.println("Consultar automata creado");
+                                System.out.println("Consultar automata creado"); 
+                                System.out.println("ingresar indice del automata");
+                                int index = sn.nextInt();
+                                listaFsm.get(index).printFsm();
+                                break;
+                            case 3:
+                                break;
                         }
 
                         break;

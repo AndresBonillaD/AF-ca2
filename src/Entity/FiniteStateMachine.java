@@ -45,6 +45,34 @@ public class FiniteStateMachine {
         this.EstadosAceptacion = estadosAceptacion;
     }
     
-    
-    
+    public void printFsm(){
+        System.out.println("#alphabet");
+        for(int i = 0; i < Alfabeto.size(); i++){
+            System.out.print(Alfabeto.get(i) + "-");
+        }
+        System.out.print('\n');
+        
+        System.out.println("#states");
+        for(int i = 0; i < Estados.size(); i++){
+            System.out.println("- " + Estados.get(i).nombre);
+        }
+        
+        System.out.println("#initialState");
+        System.out.println("- " + EstadoInicial.nombre);
+        
+        System.out.println("#accepting");
+        for(int i = 0; i < EstadosAceptacion.size(); i++){
+            System.out.println("- " + EstadosAceptacion.get(i).nombre);
+        }
+        
+        System.out.println("#transitions");
+        for(int i = 0; i < Estados.size(); i ++){
+            for (int j = 0; j < Estados.get(i).Transiciones.size(); j++){
+                System.out.println("- " + Estados.get(i).Transiciones.get(j).EstadosDestino.nombre);
+            }
+        }
+    }
+
+//class end
 }
+ 

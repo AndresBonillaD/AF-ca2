@@ -117,7 +117,7 @@ public class NewFileReader {
                 }
             }
             
-            if(fileLines.get(i).equals("#inital")){
+            if(fileLines.get(i).equals("#initial")){
                 System.out.println("generando estado inicial...");
                 while(i <= fileLines.size() && !fileLines.get(i + 1).equals("#accepting")){
                     //System.out.println("Linea: " + (i+1) + ";" + fileLines.get(i + 1));
