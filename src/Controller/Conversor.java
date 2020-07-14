@@ -35,10 +35,12 @@ public class Conversor {
         for (int i = 0; i < vuelveAFD.Estados.size(); i++) { //// recorre todo los estados 
             if (vuelveAFD.Estados.get(i).multi == true) {
                 pos = vuelveAFD.Estados.get(i).posiblesEstados();
+                
                 for (int j = 0; j < vuelveAFD.Alfabeto.size(); j++) {
                     for (int k = 0; k < pos.size(); k++) {
-                        transito = afn.GetEstadoByNombre(pos.get(i)).BuscarTransicion(vuelveAFD.Alfabeto.get(j));
+                        transito = afn.GetEstadoByNombre(pos.get(k)).BuscarTransicion(vuelveAFD.Alfabeto.get(j));
                         for (int l = 0; l < transito.size(); l++) {
+                            
                             estadoc += transito.get(k).EstadosDestino.nombre + " ";
                         }
                         vuelveAFD.AgregarEstado(estadoc);

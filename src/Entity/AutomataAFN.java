@@ -16,7 +16,9 @@ import java.util.Scanner;
  * @author crist
  */
 public class AutomataAFN extends FiniteStateMachine {
-
+    
+     public List<String> detalleEstados ; 
+     
     
     Scanner scan = new Scanner(System.in);
 
@@ -25,6 +27,8 @@ public class AutomataAFN extends FiniteStateMachine {
 
     public AutomataAFN(String estadoInicial) {
         super(estadoInicial);
+        detalleEstados = new ArrayList<>() ;
+        detalleEstados.add(estadoInicial);   
     }
 
     public AutomataAFN(List<String> alfabeto, Estado estado, List<Estado> estados, List<Estado> estadosAceptacion) {
@@ -107,7 +111,7 @@ public class AutomataAFN extends FiniteStateMachine {
            
         }
         
-        System.out.println("Ingrese las transiciones cuando termine ingrese 0 ");
+        System.out.println("Ingrese las transiciones, cuando termine ingrese 0 ");
         String actual;
         String voy;
         String termina;
@@ -209,5 +213,85 @@ public class AutomataAFN extends FiniteStateMachine {
         }
         
     }
+    public boolean procesarCadenaConDetalles(String Cadena, Estado estadoActual) {
+        if (Cadena.length() == 0 || Cadena.equals("$")) {
+            for (int i = 0; i < EstadosAceptacion.size(); i++) {
+                if (EstadosAceptacion.get(i) == estadoActual) {
+                    detalleEstados.add(estadoActual.nombre) ;
+                    return true;
+                }
+            }
+        } else {
+            String caracterEvaluar = Cadena.substring(0, 1);
+            String cadenaRestante = Cadena.substring(1, Cadena.length());
+
+            //Si la cadena que se recibe por parmaetro es de longitud 1 al buscar la transicion se debe evaluar si el estado destino es valido, retorna true, sino false.
+            List<Transicion> transicionEncontrada = estadoActual.BuscarTransicion(caracterEvaluar);
+            if (transicionEncontrada == null || transicionEncontrada.isEmpty()) {
+                Transicion fallida = new Transicion(caracterEvaluar,estadoActual);
+                //detalleEstadosNo.add(estadoActual.nombre);
+                return false;
+            }
+
+            for (int j = 0; j < transicionEncontrada.size(); j++) {
+                boolean respuesta = procesarCadenaConDetalles(cadenaRestante, transicionEncontrada.get(j).EstadosDestino);
+                if (respuesta) {
+                    detalleEstados.add(transicionEncontrada.get(j).EstadosDestino.nombre);
+                   // parejas.add(transicionEncontrada.get(j));
+                    return true;
+                }
+            }
+
+        }
+        return false;
+
+    }
+     public void listaEstados(){
+        for (int i = 0; i < detalleEstados.size(); i++) {
+            System.out.println(detalleEstados.get(i));
+        }
+        detalleEstados.clear();
+        detalleEstados.add(EstadoInicial.nombre);
+        /*System.out.print("\t");
+        for (int i = 0; i < parejas.size(); i++) {
+            System.out.print(parejas.get(i).Sigma);
+            System.out.println(",");
+            System.out.print(parejas.get(i).EstadosDestino.nombre);
+        }
+        System.out.print("\t");
+        parejas.clear();*/
+    }
+    public void computarTodosLosProcesamientos(String Cadena, Estado estadoActual) {
+        if (Cadena.length() == 0 || Cadena.equals("$")) {
+            for (int i = 0; i < EstadosAceptacion.size(); i++) {
+                if (EstadosAceptacion.get(i) == estadoActual) {
+                    //break;
+                    System.out.println("La cadena es aceptada ");
+                }else{
+                    System.out.println("La cadena no es aceptada ");
+                }
+            }
+        } else {
+            String caracterEvaluar = Cadena.substring(0, 1);
+            String cadenaRestante = Cadena.substring(1, Cadena.length());
+
+            //Si la cadena que se recibe por parmaetro es de longitud 1 al buscar la transicion se debe evaluar si el estado destino es valido, retorna true, sino false.
+            List<Transicion> transicionEncontrada = estadoActual.BuscarTransicion(caracterEvaluar);
+            if (transicionEncontrada == null || transicionEncontrada.isEmpty()) {
+                System.out.println("Es abortada en estado :" + estadoActual.nombre+ " intenta pasar con el caracter " + caracterEvaluar );
+                //return false;
+            }
+
+            for (int j = 0; j < transicionEncontrada.size(); j++) {
+                 System.out.println(estadoActual.nombre+ " paso con el caracter "+caracterEvaluar + " al estado " + transicionEncontrada.get(j).EstadosDestino);
+                boolean respuesta = procesarCadena(cadenaRestante, transicionEncontrada.get(j).EstadosDestino);
+               
+               
+            }
+
+        }
+        
+
+    } 
 
 }
