@@ -74,9 +74,15 @@ public class Automatas {
                                 FiniteStateMachine automata = new FiniteStateMachine();
                                 automata = NewFileReader.generateAutomata(ruta);
                                 listaFsm.add(automata);
+                                break;
                             case 2:
-                                System.out.println("Consultar automata creado");                                
-                                listaFsm.get(0).printFsm();
+                                System.out.println("Consultar automata creado"); 
+                                System.out.println("ingresar indice del automata");
+                                int index = sn.nextInt();
+                                listaFsm.get(index).printFsm();
+                                break;
+                            case 3:
+                                break;
                         }
                         
                         
