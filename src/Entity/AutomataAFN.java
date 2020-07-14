@@ -283,7 +283,7 @@ public class AutomataAFN extends FiniteStateMachine {
             }
 
             for (int j = 0; j < transicionEncontrada.size(); j++) {
-                 System.out.println(estadoActual.nombre+ " paso con el caracter "+caracterEvaluar + " al estado " + transicionEncontrada.get(j).EstadosDestino);
+                 System.out.println(estadoActual.nombre+ " paso con el caracter "+caracterEvaluar + " al estado " + transicionEncontrada.get(j).EstadosDestino.nombre);
                 boolean respuesta = procesarCadena(cadenaRestante, transicionEncontrada.get(j).EstadosDestino);
                
                
